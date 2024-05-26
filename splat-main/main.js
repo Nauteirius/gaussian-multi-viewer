@@ -746,7 +746,7 @@ async function main() {
     const url = new URL(
         // "nike.splat",
         // location.href,
-params.get("url") || "koparka_neg_red.splat",
+params.get("url") || "hotdog_neg.splat",
         "https://huggingface.co/datasets/bati22/splats-gs-neg-games/resolve/main/",
     );
     const req = await fetch(url, {
