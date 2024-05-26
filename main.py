@@ -107,8 +107,8 @@ def list_videos(directory):
 
 current_directory = os.getcwd()
 video_directory = os.path.join(current_directory, 'videos')
-positive_directory = os.path.join(current_directory, 'positive')
-negative_directory = os.path.join(current_directory, 'negative')
+uncolored_directory = os.path.join(current_directory, 'uncolored')
+colored_directory = os.path.join(current_directory, 'colored')
 # Gradio interface
 with gr.Blocks() as demo:
     with gr.Tabs():
@@ -153,7 +153,7 @@ with gr.Blocks() as demo:
 
             # Function to refresh file list based on toggle state
             def refresh_js_files(coloring):
-                directory = negative_directory if coloring else positive_directory
+                directory = colored_directory if coloring else uncolored_directory
                 return gr.update(choices=list_files(directory))
             
             refresh_js_files(False)
