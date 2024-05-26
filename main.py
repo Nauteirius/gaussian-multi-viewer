@@ -10,21 +10,6 @@ def list_files(directory):
         files = []
     return files
 
-# Define the function to update the HTML file with the chosen filename
-def update_html(file):
-    if file:
-        html_file_path = os.path.join(current_directory, 'example.html')
-        try:
-            with open(html_file_path, 'w') as html_file:
-                html_file.write(f"<html><body><p>Selected file: {file}</p></body></html>")
-            result = f"Updated HTML with {file}"
-        except Exception as e:
-            result = f"Failed to update HTML file: {e}"
-    else:
-        result = "No file selected"
-    return result
-
-
 # Define the function to update the JS file with the chosen file path
 def update_js(file):
     if file:
@@ -38,26 +23,11 @@ def update_js(file):
             with open(js_file_path, 'r') as js_file:
                 js_content = js_file.read()
 
-            # Define the old block and new block
-            old_block = '''const url = new URL(
-        // "nike.splat",
-        // location.href,
-        params.get("url") || "train.splat",
-        "https://huggingface.co/datasets/bati22/splats-gs-neg-games/resolve/main/",
-    );'''
-            new_block = f'''const url = new URL(
-        // "nike.splat",
-        // location.href,
-        params.get("url") || "{file}",
-        "https://huggingface.co/cakewalk/splat-data/resolve/main/",
-    );'''
             # Replace the target line with the new line containing the selected file path
             new_line = f'params.get("url") || "{file}",'
             new_js_content = '\n'.join(
                 [line if i + 1 != 749 else new_line for i, line in enumerate(js_content.split('\n'))]
             )
-            # Replace the old block with the new block
-            #new_js_content = js_content.replace(old_block, new_block)
 
             with open(js_file_path, 'w') as js_file:
                 js_file.write(new_js_content)
@@ -122,22 +92,6 @@ with gr.Blocks() as demo:
             # Dropdown to select file
             file_dropdown = gr.Dropdown(choices=list_files(vanilla_directory), label="Select a File")
 
-            
-            # Button to refresh file list
-            def refresh_files(directory):
-                return gr.update(choices=list_files(directory))
-            
-            #refresh_button = gr.Button("Refresh File List")
-            #refresh_button.click(gr.update(choices=list_files(vanilla_directory)), outputs=file_dropdown)
-            #refresh_button.click(refresh_files, inputs=True, outputs=file_dropdown)
-            
-            # Button to run the command
-            #run_button = gr.Button("Run Command")
-            #update_button = gr.Button("Update HTML")
-            #result_output = gr.Textbox(label="Output")
-            #update_button.click(update_html, inputs=file_dropdown, outputs=result_output)
-            #run_button.click(run_command, inputs=file_dropdown, outputs=result_output)
-
             # Button to update the JS file
             update_js_button = gr.Button("Display")
             js_result_output = gr.Textbox(label="Output")
@@ -160,18 +114,12 @@ with gr.Blocks() as demo:
             # Dropdown to select file
             js_file_dropdown = gr.Dropdown(label="Select a File")
 
-
-            
             # Button to refresh file list
             refresh_js_files_button = gr.Button("Refresh File List")
             refresh_js_files_button.click(refresh_js_files, inputs=coloring_toggle, outputs=js_file_dropdown)
-
             
             # Automatically refresh file list when toggle changes
             coloring_toggle.change(refresh_js_files, inputs=coloring_toggle, outputs=js_file_dropdown)
-
-            # Set default file list based on initial toggle state
-            #initial_state = coloring_toggle.value
 
 
             # Button to update the JS file
